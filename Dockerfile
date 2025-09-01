@@ -55,8 +55,7 @@ ENV CAPE_CD=/opt/CAPEv2/conf
 WORKDIR /opt/CAPEv2
 
 # Install additional dependencies
-RUN python -m pip install azure-identity msrest msrestazure azure-mgmt-compute azure-mgmt-network azure-mgmt-storage azure-storage-blob && \
-    python -m pip install https://github.com/CAPESandbox/peepdf/archive/20eda78d7d77fc5b3b652ffc2d8a5b0af796e3dd.zip#egg=peepdf==0.4.2 && \
+RUN python -m pip install azure-identity msrest msrestazure azure-mgmt-compute azure-mgmt-network azure-mgmt-storage azure-storage-blob peepdf && \
     python -m pip install -U git+https://github.com/DissectMalware/batch_deobfuscator && \
     python -m pip install -U git+https://github.com/CAPESandbox/httpreplay
 
