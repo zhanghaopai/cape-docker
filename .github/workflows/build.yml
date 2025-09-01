@@ -53,8 +53,8 @@ jobs:
         tag_name: ${{ github.ref }}
         release_name: Release ${{ github.ref }}
         body: |  # Updated release description here
-          This release contains the binaries and Docker images:
-          - Docker images are available on Docker Hub: `celyrin/cape:base` and `celyrin/cape:${{ github.sha }}`
+          This release contains the following files:
+          - `cape-docker.tar.gz`: Docker image of the latest build. Use `gunzip -c cape-docker.tar.gz | docker load` to load this image into your Docker environment.
           - `bin.tar.gz`: Archive of the binaries.
         draft: false
         prerelease: false
@@ -68,4 +68,14 @@ jobs:
         asset_path: ./bin.tar.gz
         asset_name: bin.tar.gz
         asset_content_type: application/gzip
+        
+    - name: Upload Docker Image to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cape-docker.tar.gz
+        asset_name: cape-docker.tar.gz
+        asset_content_type: application/octet-stream
         
