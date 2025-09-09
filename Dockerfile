@@ -1,11 +1,18 @@
 # Use Ubuntu 22.04 as the base image
 FROM ubuntu:22.04
 
-ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y tzdata
+# 设置环境变量以支持systemd
+ENV container=docker
+ENV DEBIAN_FRONTEND=noninteractive
 
-# Install Python and other dependencies as root before switching to user
+
+
+# 安装systemd相关依赖
 RUN apt-get update && apt-get install -y \
+    systemd \
+    systemd-sysv \
+    libpam-systemd \
+    tzdata \
     python3.10 \
     python3.10-dev \
     curl \
@@ -20,6 +27,9 @@ RUN apt-get update && apt-get install -y \
 
 # Use update-alternatives to set python3.10 as the default python
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
+
+# 禁用不需要的服务
+RUN systemctl set-default multi-user.target
 
 # Set the working directory to /home/cuckoo
 WORKDIR /home/installer
@@ -60,7 +70,7 @@ WORKDIR /opt/CAPEv2
 # Install dependencies
 RUN poetry install
 
-USER  root
+USER root
 
-ENTRYPOINT ["/usr/sbin/init"]
-
+# 设置systemd入口点
+ENTRYPOINT ["/sbin/init"]
