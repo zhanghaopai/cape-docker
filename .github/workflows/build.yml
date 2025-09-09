@@ -30,8 +30,8 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t cape:${{ github.sha }} .
-        docker save cape:${{ github.sha }} | gzip > cape-docker-image.tar.gz
+        docker build -t cape:${{ github.ref_name }} .
+        docker save cape:${{ github.ref_name }} | gzip > cape-docker-image.tar.gz
 
     - name: Package Binaries
       run: tar -czvf bin.tar.gz bin
@@ -42,8 +42,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: ${{ github.ref }}
-        release_name: Release ${{ github.ref }}
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
         body: |
           This release contains the binaries and Docker images:
           - `bin.tar.gz`: Archive of the binaries.
