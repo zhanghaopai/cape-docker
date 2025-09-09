@@ -29,8 +29,8 @@ COPY CAPEv2/installer/* /home/installer
 
 # Install CAPEv2
 RUN chmod a+x ./cape2.sh \
-    && ./cape2.sh base cape \
-    && ./cape2.sh all cape
+    && sudo ./cape2.sh base cape \
+    && sudo ./cape2.sh all cape
 
 # Install VirtualBox
 COPY bin/vbox-client /usr/bin/VBoxManage
