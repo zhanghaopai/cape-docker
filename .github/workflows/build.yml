@@ -63,15 +63,34 @@ jobs:
         asset_content_type: application/gzip
 
     - name: Upload Docker Image Parts to Release
-      run: |
-        for file in cape-docker-image.tar.gz.*; do
-          if [ -f "$file" ]; then
-            echo "Uploading $file"
-            upload_url=$(curl -s -H "Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" \
-              -H "Content-Type: application/gzip" \
-              --data-binary @$file \
-              "${{ steps.create_release.outputs.upload_url }}&name=$file" \
-              | jq -r '.upload_url')
-            echo "Uploaded $file with response: $upload_url"
-          fi
-        done
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cape-docker-image.tar.gz.aa
+        asset_name: cape-docker-image.tar.gz.aa
+        asset_content_type: application/gzip
+      if: steps.create_release.outcome == 'success' && hashFiles('cape-docker-image.tar.gz.aa') != ''
+
+    - name: Upload additional Docker Image part .ab
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cape-docker-image.tar.gz.ab
+        asset_name: cape-docker-image.tar.gz.ab
+        asset_content_type: application/gzip
+      if: steps.create_release.outcome == 'success' && hashFiles('cape-docker-image.tar.gz.ab') != ''
+
+    - name: Upload additional Docker Image part .ac
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./cape-docker-image.tar.gz.ac
+        asset_name: cape-docker-image.tar.gz.ac
+        asset_content_type: application/gzip
+      if: steps.create_release.outcome == 'success' && hashFiles('cape-docker-image.tar.gz.ac') != ''
