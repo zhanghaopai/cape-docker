@@ -34,9 +34,6 @@ jobs:
         docker save cape:${{ github.sha }} | gzip | split -b 1G - cape-docker-image.tar.gz.
         ls -la cape-docker-image.tar.gz.*
 
-    - name: Package Binaries
-      run: tar -czvf bin.tar.gz bin
-
     - name: Create Release
       id: create_release
       uses: actions/create-release@v1
@@ -46,21 +43,10 @@ jobs:
         tag_name: v0.99.1
         release_name: Release v0.99.1
         body: |
-          This release contains the binaries and Docker images:
-          - `bin.tar.gz`: Archive of the binaries.
+          This release Docker images:
           - `cape-docker-image.tar.gz.*`: Docker image archive (split into 1GB parts). Join with `cat cape-docker-image.tar.gz.* | docker load`
         draft: false
         prerelease: false
-
-    - name: Upload Binaries Archive to Release
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./bin.tar.gz
-        asset_name: bin.tar.gz
-        asset_content_type: application/gzip
 
     - name: Upload Docker Image Parts to Release
       uses: actions/upload-release-asset@v1
