@@ -77,6 +77,22 @@ else
     ln -s $work/log $cwd/log
 fi
 
+# 启动 libvirt-daemon 服务
+if ! systemctl is-active --quiet libvirtd.service; then
+    echo "Starting libvirtd.service"
+    systemctl start libvirtd.service
+fi
+
+# 确保 libvirt 组存在并将 cape 用户添加到组中
+if getent group libvirt > /dev/null 2>&1; then
+    if ! id -nG cape | grep -qw libvirt; then
+        echo "Adding cape user to libvirt group"
+        usermod -aG libvirt cape
+    fi
+else
+    echo "Warning: libvirt group not found"
+fi
+
 if ! systemctl is-active --quiet cape-rooter.service; then
     echo "Starting cape-rooter.service"
     systemctl restart cape-rooter.service
