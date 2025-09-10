@@ -24,7 +24,11 @@ RUN apt-get update && apt-get install -y \
     p7zip-full \
     git \
     tcpdump \
-    sudo
+    sudo \
+    libvirt-dev \
+    pkg-config \
+    libvirt-daemon-system \
+    libvirt-clients
 
 # Use update-alternatives to set python3.10 as the default python
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
