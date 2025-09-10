@@ -1,3 +1,5 @@
 [submodule "CAPEv2"]
 	path = CAPEv2
 	url = https://github.com/zhanghaopai/CAPEv2.git
+	branch = master
+
