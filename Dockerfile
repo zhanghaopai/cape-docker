@@ -10,6 +10,7 @@ ENV PATH="/etc/poetry/bin:$PATH"
 
 # 安装systemd相关依赖
 RUN apt-get update && apt-get install -y \
+    lsb-core \
     tzdata \
     python3.10 \
     python3.10-dev \
