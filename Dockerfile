@@ -1,5 +1,5 @@
 # Use Ubuntu 20.04 as the base image
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # 设置环境变量以支持systemd
 ENV container=docker
