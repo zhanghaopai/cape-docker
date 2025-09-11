@@ -69,8 +69,15 @@ USER cape
 # Set the working directory to /opt/CAPEv2
 WORKDIR /opt/CAPEv2
 
-# Install dependencies
-RUN poetry install
+# 调试信息
+RUN echo "Current user: $(whoami)"
+RUN echo "Directory contents:" && ls -la
+RUN echo "Poetry config:" && poetry config --list
+RUN echo "Checking pyproject.toml:" && poetry check
+RUN poetry cache clear pypi --all
+
+# 安装依赖（详细模式）
+RUN poetry install -vvv || (echo "=== Poetry Debug Info ===" && poetry show && echo "=== Environment ===" && env && exit 1)
 
 USER root
 
