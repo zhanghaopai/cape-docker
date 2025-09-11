@@ -67,7 +67,6 @@ RUN echo "Current user: $(whoami)"
 RUN echo "Directory contents:" && ls -la
 RUN echo "poetry in-project" && poetry config virtualenvs.in-project true && poetry config installer.parallel false && poetry config installer.max-workers 1
 RUN echo "Poetry config:" && poetry config --list
-RUN echo "Checking pyproject.toml:" && poetry check
 RUN poetry cache clear pypi --all
 
 # 安装依赖（详细模式）
