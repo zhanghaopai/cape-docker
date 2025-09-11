@@ -26,7 +26,8 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     libvirt-daemon-system \
     libvirt-clients \
-    supervisor
+    supervisor \
+    vim
 
 # Use update-alternatives to set python3.10 as the default python
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
