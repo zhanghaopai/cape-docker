@@ -10,9 +10,6 @@ ENV PATH="/etc/poetry/bin:$PATH"
 
 # 安装systemd相关依赖
 RUN apt-get update && apt-get install -y \
-    systemd \
-    systemd-sysv \
-    libpam-systemd \
     tzdata \
     python3.10 \
     python3.10-dev \
@@ -28,13 +25,14 @@ RUN apt-get update && apt-get install -y \
     libvirt-dev \
     pkg-config \
     libvirt-daemon-system \
-    libvirt-clients
+    libvirt-clients \
+    supervisor
 
 # Use update-alternatives to set python3.10 as the default python
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
 
-# 禁用不需要的服务
-RUN systemctl set-default multi-user.target
+# 创建supervisor配置目录
+RUN mkdir -p /etc/supervisor/conf.d
 
 # Set the working directory to /home/cuckoo
 WORKDIR /home/installer
@@ -57,13 +55,6 @@ RUN usermod -aG sudo cape \
 # Set the password for the cape user
 RUN echo "cape:cape" | chpasswd
 
-# Copy the entrypoint script into the container at /home/cape
-COPY scripts/entrypoint.sh /home/cape/entrypoint.sh
-COPY scripts/cape-entry.service /etc/systemd/system/cape-entry.service
-
-# enable the service
-RUN systemctl enable cape-entry.service
-
 USER cape
 
 # Set the working directory to /opt/CAPEv2
@@ -81,5 +72,8 @@ RUN poetry install -vvv || (echo "=== Poetry Debug Info ===" && poetry show && e
 
 USER root
 
-# 设置systemd入口点
-ENTRYPOINT ["/sbin/init"]
+COPY scripts/supervisord.conf /etc/supervisor/supervisord.conf
+
+# 设置supervisor为入口点
+ENTRYPOINT ["/usr/bin/supervisord"]
+CMD ["-c", "/etc/supervisor/supervisord.conf"]
