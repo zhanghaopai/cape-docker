@@ -1,5 +1,5 @@
-# Use Ubuntu 22.04 as the base image
-FROM ubuntu:22.04
+# Use Ubuntu 20.04 as the base image
+FROM ubuntu:20.04
 
 # 设置环境变量以支持systemd
 ENV container=docker
@@ -65,12 +65,13 @@ WORKDIR /opt/CAPEv2
 # 调试信息
 RUN echo "Current user: $(whoami)"
 RUN echo "Directory contents:" && ls -la
+RUN echo "poetry in-project" && poetry config virtualenvs.in-project true && poetry config installer.parallel false && poetry config installer.max-workers 1
 RUN echo "Poetry config:" && poetry config --list
 RUN echo "Checking pyproject.toml:" && poetry check
 RUN poetry cache clear pypi --all
 
 # 安装依赖（详细模式）
-RUN poetry install -vvv || (echo "=== Poetry Debug Info ===" && poetry show && echo "=== Environment ===" && env && exit 1)
+RUN poetry install -v || (echo "=== Poetry Debug Info ===" && poetry show && echo "=== Environment ===" && env && exit 1)
 
 USER root
 
