@@ -42,8 +42,8 @@ COPY CAPEv2/installer/* /home/installer
 
 # Install CAPEv2
 RUN chmod a+x ./cape2.sh \
-    && sudo ./cape2.sh base cape \
-    && sudo ./cape2.sh all cape
+    && sudo ./cape2-docker.sh base cape \
+    && sudo ./cape2-docker.sh all cape
 
 # Clean up
 RUN rm -rf /home/installer
