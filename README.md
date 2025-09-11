@@ -28,7 +28,9 @@ To successfully run the CAPEv2 environment, use the following Docker command to 
 
 ```bash
 docker run -it \
-    --cap-add SYS_ADMIN -v /sys/fs/cgroup:/sys/fs/cgroup:rw --cgroupns=host\
+    --cap-add SYS_ADMIN -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
+    --cgroupns=host\
+    --privileged \
     --tmpfs /run --tmpfs /run/lock \
     --net=host --cap-add=NET_RAW --cap-add=NET_ADMIN \
     --cap-add=SYS_NICE -v $(realpath ./work):/work \
