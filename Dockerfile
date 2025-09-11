@@ -70,7 +70,7 @@ RUN echo "Poetry config:" && poetry config --list
 RUN poetry cache clear pypi --all
 
 # 安装依赖（详细模式）
-RUN poetry install -v || (echo "=== Poetry Debug Info ===" && poetry show && echo "=== Environment ===" && env && exit 1)
+RUN poetry install -v
 
 USER root
 
