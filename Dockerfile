@@ -41,7 +41,7 @@ WORKDIR /home/installer
 COPY CAPEv2/installer/* /home/installer
 
 # Install CAPEv2
-RUN chmod a+x ./cape2.sh \
+RUN chmod a+x ./cape2-docker.sh \
     && sudo ./cape2-docker.sh base cape \
     && sudo ./cape2-docker.sh all cape
 
