@@ -85,24 +85,9 @@ else
     echo "Warning: libvirt group not found"
 fi
 
-if ! systemctl is-active --quiet cape-rooter.service; then
-    echo "Starting cape-rooter.service"
-    systemctl restart cape-rooter.service
-fi
-
-if ! systemctl is-active --quiet cape.service; then
-    echo "Starting cape.service"
-    systemctl restart cape.service
-fi
-
-if ! systemctl is-active --quiet cape-web.service; then
-    echo "Starting cape-web.service"
-    systemctl restart cape-web.service
-fi
-
-if ! systemctl is-active --quiet cape-processor.service; then
-    echo "Starting cape-processor.service"
-    systemctl restart cape-processor.service
-fi
+# 启动supervisord来管理服务
+echo "Starting supervisord..."
+/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 
 echo "End of entrypoint"
+exit 0

@@ -61,6 +61,8 @@ RUN echo "cape:cape" | chpasswd
 USER root
 
 COPY scripts/supervisord.conf /etc/supervisor/supervisord.conf
+COPY scripts/entrypoint.sh /entrypoint.sh
+RUN chmod +x /entrypoint.sh
 
-# 设置supervisor为入口点
-ENTRYPOINT ["/usr/bin/supervisord"]
+# 设置/bin/bash为入口点，并执行脚本
+ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
