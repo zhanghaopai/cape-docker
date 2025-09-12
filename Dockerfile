@@ -57,14 +57,6 @@ RUN usermod -aG sudo cape \
 # Set the password for the cape user
 RUN echo "cape:cape" | chpasswd
 
-USER cape
-
-# Set the working directory to /opt/CAPEv2
-WORKDIR /opt/CAPEv2
-
-# 调试信息
-RUN pip install -r requirements.txt
-
 USER root
 
 COPY scripts/supervisord.conf /etc/supervisor/supervisord.conf
