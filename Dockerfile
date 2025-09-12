@@ -71,4 +71,3 @@ COPY scripts/supervisord.conf /etc/supervisor/supervisord.conf
 
 # 设置supervisor为入口点
 ENTRYPOINT ["/usr/bin/supervisord"]
-CMD ["-c", "/etc/supervisor/supervisord.conf"]
