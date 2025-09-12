@@ -30,12 +30,11 @@ To successfully run the CAPEv2 environment, use the following Docker command to 
 docker run -it \
     --cap-add SYS_ADMIN -v /sys/fs/cgroup:/sys/fs/cgroup:rw \
     --cgroupns=host\
-    --privileged \
     --tmpfs /run --tmpfs /run/lock \
     --net=host --cap-add=NET_RAW --cap-add=NET_ADMIN \
     --cap-add=SYS_NICE -v $(realpath ./work):/work \
     --device /dev/kvm  -v /var/run/libvirt:/var/run/libvirt \
-    --name cape celyrin/cape:kvm
+    --name cape cape:{{tag_name}}
 ```
 
 ### Detailed Explanation of Docker Command
