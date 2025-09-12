@@ -1,4 +1,22 @@
 #!/bin/bash
+# 创建一些必要的文件夹
+# 只有当/var/run/postgresql目录不存在时才创建
+if [ ! -d "/var/run/postgresql" ]; then
+    echo "Creating /var/run/postgresql directory"
+    mkdir -p /var/run/postgresql
+    chown -R postgres:postgres /var/run/postgresql
+fi
+# 只有当/work目录不存在时才创建
+if [ ! -d "/work" ]; then
+    echo "Creating /work directory"
+    mkdir -p /work
+fi
+
+
+
+# 启动supervisord来管理服务
+echo "Starting supervisord..."
+/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 
 if [ -z "$(sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='cape'")" ]; then
     sudo -u postgres psql -c "CREATE ROLE cape WITH SUPERUSER LOGIN PASSWORD 'SuperPuperSecret';"
@@ -69,25 +87,21 @@ else
     ln -s $work/log $cwd/log
 fi
 
-# 启动 libvirt-daemon 服务
-if ! systemctl is-active --quiet libvirtd.service; then
-    echo "Starting libvirtd.service"
-    systemctl start libvirtd.service
-fi
-
-# 确保 libvirt 组存在并将 cape 用户添加到组中
-if getent group libvirt > /dev/null 2>&1; then
-    if ! id -nG cape | grep -qw libvirt; then
-        echo "Adding cape user to libvirt group"
-        usermod -aG libvirt cape
-    fi
-else
-    echo "Warning: libvirt group not found"
-fi
-
-# 启动supervisord来管理服务
-echo "Starting supervisord..."
-/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+## 启动 libvirt-daemon 服务
+#if ! systemctl is-active --quiet libvirtd.service; then
+#    echo "Starting libvirtd.service"
+#    systemctl start libvirtd.service
+#fi
+#
+## 确保 libvirt 组存在并将 cape 用户添加到组中
+#if getent group libvirt > /dev/null 2>&1; then
+#    if ! id -nG cape | grep -qw libvirt; then
+#        echo "Adding cape user to libvirt group"
+#        usermod -aG libvirt cape
+#    fi
+#else
+#    echo "Warning: libvirt group not found"
+#fi
 
 echo "End of entrypoint"
 exit 0
