@@ -4,6 +4,7 @@ FROM ubuntu:22.04
 # 设置环境变量以支持systemd
 ENV container=docker
 ENV PATH="/etc/poetry/bin:$PATH"
+ENV POETRY_VIRTUALENVS_IN_PROJECT=true
 ARG DEBIAN_FRONTEND=noninteractive
 
 
