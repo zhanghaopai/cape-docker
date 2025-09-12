@@ -4,7 +4,6 @@ FROM ubuntu:22.04
 # 设置环境变量以支持systemd
 ENV container=docker
 ENV PATH="/etc/poetry/bin:$PATH"
-
 ARG DEBIAN_FRONTEND=noninteractive
 
 
@@ -64,14 +63,7 @@ USER cape
 WORKDIR /opt/CAPEv2
 
 # 调试信息
-RUN echo "Current user: $(whoami)"
-RUN echo "Directory contents:" && ls -la
-RUN echo "poetry in-project" && poetry config virtualenvs.in-project true && poetry config installer.parallel false && poetry config installer.max-workers 1
-RUN echo "Poetry config:" && poetry config --list
-RUN poetry cache clear pypi --all
-
-# 安装依赖（详细模式）
-RUN poetry install -v
+RUN pip install -r requirements.txt
 
 USER root
 
