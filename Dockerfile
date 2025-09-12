@@ -64,5 +64,7 @@ COPY scripts/supervisord.conf /etc/supervisor/supervisord.conf
 COPY scripts/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+
+EXPOSE 8000
 # 设置/bin/bash为入口点，并执行脚本
 ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
