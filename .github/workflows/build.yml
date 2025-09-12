@@ -25,8 +25,8 @@ jobs:
 
     - name: Build Docker image and split into volumes
       run: |
-        docker build -t cape:${{ github.sha }} .
-        docker save cape:${{ github.sha }} | gzip | split -b 1G - cape-docker-image.tar.gz.
+        docker build -t cape:${{ github.ref_name }} .
+        docker save cape:${{ github.ref_name }} | gzip | split -b 1G - cape-docker-image.tar.gz.
         ls -la cape-docker-image.tar.gz.*
 
     - name: Create Release
@@ -35,8 +35,8 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        tag_name: v0.99.1
-        release_name: Release v0.99.1
+        tag_name: ${{ github.ref_name }}
+        release_name: Release ${{ github.ref_name }}
         body: |
           This release Docker images:
           - `cape-docker-image.tar.gz.*`: Docker image archive (split into 1GB parts). Join with `cat cape-docker-image.tar.gz.* | docker load`
