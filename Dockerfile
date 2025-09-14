@@ -67,4 +67,4 @@ RUN chmod +x /entrypoint.sh
 
 EXPOSE 8000
 # 设置/bin/bash为入口点，并执行脚本
-ENTRYPOINT ["/bin/bash", "/entrypoint.sh"]
+ENTRYPOINT ["/entrypoint.sh"]
