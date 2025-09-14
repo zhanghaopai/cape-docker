@@ -18,6 +18,23 @@ fi
 echo "Starting supervisord..."
 /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
 
+
+# 等待 PostgreSQL 完全启动
+echo "Waiting for PostgreSQL to start..."
+RETRIES=30
+until sudo -u postgres psql -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+    echo "Waiting for PostgreSQL to start, $RETRIES remaining attempts..."
+    sleep 2
+    RETRIES=$((RETRIES - 1))
+done
+
+if [ $RETRIES -eq 0 ]; then
+    echo "PostgreSQL failed to start, exiting."
+    exit 1
+fi
+
+echo "PostgreSQL started successfully."
+
 if [ -z "$(sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='cape'")" ]; then
     sudo -u postgres psql -c "CREATE ROLE cape WITH SUPERUSER LOGIN PASSWORD 'SuperPuperSecret';"
 fi
@@ -87,21 +104,7 @@ else
     ln -s $work/log $cwd/log
 fi
 
-## 启动 libvirt-daemon 服务
-#if ! systemctl is-active --quiet libvirtd.service; then
-#    echo "Starting libvirtd.service"
-#    systemctl start libvirtd.service
-#fi
-#
-## 确保 libvirt 组存在并将 cape 用户添加到组中
-#if getent group libvirt > /dev/null 2>&1; then
-#    if ! id -nG cape | grep -qw libvirt; then
-#        echo "Adding cape user to libvirt group"
-#        usermod -aG libvirt cape
-#    fi
-#else
-#    echo "Warning: libvirt group not found"
-#fi
-
 echo "End of entrypoint"
-exit 0
+
+sleep 5
+tail -f /var/log/supervisor/supervisord.log
