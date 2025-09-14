@@ -1,6 +1,4 @@
 #!/bin/bash
-
-echo "Entrypoint started"
 # 创建一些必要的文件夹
 # 只有当/var/run/postgresql目录不存在时才创建
 if [ ! -d "/var/run/postgresql" ]; then
@@ -12,6 +10,37 @@ fi
 if [ ! -d "/work" ]; then
     echo "Creating /work directory"
     mkdir -p /work
+fi
+
+
+
+# 启动supervisord来管理服务
+echo "Starting supervisord..."
+/usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+
+
+# 等待 PostgreSQL 完全启动
+echo "Waiting for PostgreSQL to start..."
+RETRIES=30
+until sudo -u postgres psql -c "select 1" > /dev/null 2>&1 || [ $RETRIES -eq 0 ]; do
+    echo "Waiting for PostgreSQL to start, $RETRIES remaining attempts..."
+    sleep 2
+    RETRIES=$((RETRIES - 1))
+done
+
+if [ $RETRIES -eq 0 ]; then
+    echo "PostgreSQL failed to start, exiting."
+    exit 1
+fi
+
+echo "PostgreSQL started successfully."
+
+if [ -z "$(sudo -u postgres psql -tAc "SELECT 1 FROM pg_roles WHERE rolname='cape'")" ]; then
+    sudo -u postgres psql -c "CREATE ROLE cape WITH SUPERUSER LOGIN PASSWORD 'SuperPuperSecret';"
+fi
+
+if [ -z "$(sudo -u postgres psql -lqt | cut -d \| -f 1 | grep -w cape)" ]; then
+    sudo -u postgres psql -c "CREATE DATABASE cape WITH OWNER cape;"
 fi
 
 work=/work
@@ -77,6 +106,5 @@ fi
 
 echo "End of entrypoint"
 
-# 启动supervisord来管理服务
-echo "Starting supervisord..."
-exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf
+sleep 5
+tail -f /var/log/supervisor/supervisord.log
