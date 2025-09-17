@@ -55,14 +55,14 @@ jobs:
 
 
     - name: Upload Binaries Archive to Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ./bin.tar.gz
-          asset_name: bin.tar.gz
-          asset_content_type: application/gzip
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./bin.tar.gz
+        asset_name: bin.tar.gz
+        asset_content_type: application/gzip
 
     - name: Upload Docker Image Parts .aa
       uses: actions/upload-release-asset@v1
