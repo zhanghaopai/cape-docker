@@ -25,8 +25,9 @@ jobs:
 
     - name: Build Binary
       run: |
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-extldflags "-static"' -o $(BIN_DIR)/vbox-server vbox-server.go
-        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-extldflags "-static"' -o $(BIN_DIR)/vbox-client vbox-client.go
+        mkdir -p bin/
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-extldflags "-static"' -o bin/vbox-server vbox-server.go
+        CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -a -ldflags '-extldflags "-static"' -o bin/vbox-client vbox-client.go
 
     - name: Package Binaries
         run: tar -czvf bin.tar.gz bin
