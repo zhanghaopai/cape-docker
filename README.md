@@ -33,7 +33,7 @@ docker run -it \
     --tmpfs /run --tmpfs /run/lock \
     --net=host --cap-add=NET_RAW --cap-add=NET_ADMIN \
     --cap-add=SYS_NICE -v $(realpath ./work):/work \
-    --device /dev/kvm  -v /var/run/libvirt:/var/run/libvirt \
+    -v $(realpath ./vbox.sock):/opt/vbox/vbox.sock \
     --name cape cape:{{tag_name}}
 ```
 
